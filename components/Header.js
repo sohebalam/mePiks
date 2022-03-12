@@ -14,7 +14,7 @@ import { useEffect, useState } from "react"
 import { toast } from "react-toastify"
 import { useDispatch, useSelector } from "react-redux"
 import { loadUser } from "../redux/userAction"
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined"
+import PhotoCameraIcon from "@mui/icons-material/PhotoCamera"
 export default function ButtonAppBar() {
   const cookies = parseCookies()
   const router = useRouter()
@@ -73,7 +73,7 @@ export default function ButtonAppBar() {
             // sx={{ flexGrow: 1 }}
           >
             <Link href="http://localhost:3000">
-              <LockOutlinedIcon />
+              <PhotoCameraIcon />
             </Link>
           </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>

@@ -84,7 +84,7 @@ function Register() {
   }
 
   return (
-    <ThemeProvider>
+    <>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
@@ -204,7 +204,7 @@ function Register() {
           </Box>
         </Box>
       </Container>
-    </ThemeProvider>
+    </>
   )
 }
 

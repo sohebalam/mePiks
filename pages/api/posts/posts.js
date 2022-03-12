@@ -12,7 +12,7 @@ export default async (req, res) => {
   }
 
   if (req.method === "POST") {
-    const post = req.body
+    const post = req.body.memoryData
     const newPost = await new Post(post)
     try {
       await newPost.save()

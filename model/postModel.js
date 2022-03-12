@@ -1,16 +1,15 @@
 import mongoose from "mongoose"
 
 const postSchema = mongoose.Schema({
-  titile: {
+  title: {
     type: String,
   },
 
   message: {
     type: String,
   },
-  creator: {
+  creater: {
     type: String,
-    required: true,
   },
   tags: [String],
   image: { type: String },

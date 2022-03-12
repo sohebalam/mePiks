@@ -1,6 +1,6 @@
 import * as React from "react"
 import Avatar from "@mui/material/Avatar"
-import Button from "@mui/material/Button"
+
 import CssBaseline from "@mui/material/CssBaseline"
 import TextField from "@mui/material/TextField"
 import FormControlLabel from "@mui/material/FormControlLabel"
@@ -9,7 +9,7 @@ import Link from "@mui/material/Link"
 import Grid from "@mui/material/Grid"
 import Box from "@mui/material/Box"
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined"
-import Typography from "@mui/material/Typography"
+
 import Container from "@mui/material/Container"
 import { createTheme, ThemeProvider } from "@mui/material/styles"
 import { useState, useEffect } from "react"
@@ -22,12 +22,14 @@ import { parseCookies } from "nookies"
 import { GoogleLoginButton } from "react-social-login-buttons"
 import { loadUser } from "../../../redux/userAction"
 import { useDispatch } from "react-redux"
+import Form from "../../../components/form/Form"
+
+import PostCard from "../../../components/posts/PostCard"
 
 const theme = createTheme()
 
 function Dashboard() {
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
+  const [postData, setPostData] = useState()
   const router = useRouter()
 
   const cookies = parseCookies()
@@ -35,18 +37,36 @@ function Dashboard() {
   const { data: session } = useSession()
 
   useEffect(() => {
-    if (!session && !cookies?.user) {
-      router.push("/src/user/login")
+    getPosts()
+  }, [])
+
+  const getPosts = async () => {
+    try {
+      const { data } = await axios.get(`/api/posts/posts`)
+
+      setPostData(data)
+    } catch (error) {
+      console.log(error)
     }
-  }, [router])
+  }
 
   return (
-    <>
-      <Typography component="h1" variant="h5">
-        Dashboard
-      </Typography>
-      <h3>This is secret page</h3>
-    </>
+    <Grid container sx={{ mt: "1rem" }}>
+      <Grid item xs={8}>
+        <Grid container>
+          {postData &&
+            postData?.map((post) => (
+              <Box key={post._id} sx={{ m: 1 }}>
+                <PostCard postData={post} />
+              </Box>
+            ))}
+        </Grid>
+      </Grid>
+
+      <Grid item xs={4}>
+        <Form />
+      </Grid>
+    </Grid>
   )
 }
 
