@@ -8,7 +8,7 @@ import Button from "@mui/material/Button"
 const PostCard = ({ postData }) => {
   return (
     <>
-      <Card sx={{ maxWidth: 250 }}>
+      <Card sx={{ maxWidth: 230 }}>
         <CardMedia
           component="img"
           height="200"
@@ -19,17 +19,25 @@ const PostCard = ({ postData }) => {
           <Typography gutterBottom variant="h5" component="div">
             {postData?.title}
           </Typography>
-          <Typography gutterBottom variant="h5" component="div">
+          <Typography gutterBottom variant="h7" component="div">
             {postData?.creater}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            {postData?.message}
+            {postData?.message.length > 60
+              ? postData?.message.substring(60, 0) + "..."
+              : postData?.message}
           </Typography>
-          <Typography variant="body2" color="text.secondary">
-            {postData?.tags.map((tag) => `#${tag}`)}
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{ mt: "0.5rem" }}
+          >
+            {postData?.tags.map((tag) =>
+              tag.length > 22 ? `#${tag.substring(22, 0)}` + "..." : `#${tag}`
+            )}
           </Typography>
         </CardContent>
-        <CardActions>
+        <CardActions sx={{ mt: "-1rem" }}>
           <Button size="small">Like</Button>
           <Button size="small">Delete</Button>
         </CardActions>

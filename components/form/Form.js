@@ -19,6 +19,8 @@ import { useSession, signIn, signOut, getSession } from "next-auth/react"
 import { useRouter } from "next/router"
 
 import FileBase from "react-file-base64"
+import { createPosts } from "../../redux/posts/postActions"
+import { useDispatch } from "react-redux"
 
 function Form() {
   const [message, setMessage] = useState("")
@@ -28,6 +30,7 @@ function Form() {
   const [selectedFile, setSelectedFile] = useState("")
   const router = useRouter()
 
+  const dispatch = useDispatch()
   const SubmitHandler = async (e) => {
     e.preventDefault()
 
@@ -38,24 +41,8 @@ function Form() {
       creater,
       title,
     }
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }
 
-    const { data } = await axios.post(
-      `/api/posts/posts`,
-      { memoryData },
-      config
-    )
-
-    console.log(data)
-
-    try {
-    } catch (error) {
-      console.log(error)
-    }
+    dispatch(createPosts(memoryData))
   }
 
   return (

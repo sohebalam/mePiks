@@ -8,6 +8,7 @@ import CssBaseline from "@mui/material//CssBaseline"
 import theme from "../theme"
 import { ToastContainer } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
+import "../styles/globals.css"
 
 import { wrapper } from "../redux/store"
 

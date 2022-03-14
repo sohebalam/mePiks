@@ -72,12 +72,12 @@ export default function ButtonAppBar() {
             sx={{ mr: 2 }}
             // sx={{ flexGrow: 1 }}
           >
-            <Link href="http://localhost:3000">
+            <Link href="/">
               <PhotoCameraIcon />
             </Link>
           </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            AuthApp
+            MePiks
           </Typography>
           <Link href="/src/user/profile">
             <Button color="inherit">{userState && userState.name}</Button>

@@ -1,9 +1,11 @@
 import Post from "../../../model/postModel"
+import connectDB from "../../../connectDB"
+connectDB()
 
 export default async (req, res) => {
   if (req.method === "GET") {
     try {
-      const post = await Post.find()
+      const post = await Post.find({})
 
       return res.status(200).json(post)
     } catch (err) {
@@ -13,6 +15,7 @@ export default async (req, res) => {
 
   if (req.method === "POST") {
     const post = req.body.memoryData
+    // console.log(req.method)
     const newPost = await new Post(post)
     try {
       await newPost.save()
