@@ -5,6 +5,12 @@ import {
   CREATE_POSTS_REQUEST,
   CREATE_POSTS_SUCCESS,
   CREATE_POSTS_FAIL,
+  POST_DELETE_REQUEST,
+  POST_DELETE_SUCCESS,
+  POST_DELETE_FAIL,
+  POST_UPDATE_REQUEST,
+  POST_UPDATE_SUCCESS,
+  POST_UPDATE_FAIL,
 } from "./postTypes"
 
 export const postGetReducer = (state = {}, action) => {
@@ -27,6 +33,32 @@ export const postCreateReducer = (state = {}, action) => {
     case CREATE_POSTS_SUCCESS:
       return { loading: false, post: action.payload }
     case CREATE_POSTS_FAIL:
+      return { loading: false, error: action.payload }
+    default:
+      return state
+  }
+}
+
+export const deleteAPostReducer = (state = {}, action) => {
+  switch (action.type) {
+    case POST_DELETE_REQUEST:
+      return { loading: true }
+    case POST_DELETE_SUCCESS:
+      return { loading: false, post: action.payload }
+    case POST_DELETE_FAIL:
+      return { loading: false, error: action.payload }
+    default:
+      return state
+  }
+}
+
+export const postUpdateReducer = (state = {}, action) => {
+  switch (action.type) {
+    case POST_UPDATE_REQUEST:
+      return { loading: true }
+    case POST_UPDATE_SUCCESS:
+      return { loading: false, post: action.payload }
+    case POST_UPDATE_FAIL:
       return { loading: false, error: action.payload }
     default:
       return state

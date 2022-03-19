@@ -4,8 +4,37 @@ import CardContent from "@mui/material/CardContent"
 import CardMedia from "@mui/material/CardMedia"
 import Typography from "@mui/material/Typography"
 import Button from "@mui/material/Button"
+import axios from "axios"
+import { useDispatch, useSelector } from "react-redux"
+import { likePost, postDelete, postlike } from "../../redux/posts/postActions"
+import { toast } from "react-toastify"
+import { Box, Grid } from "@mui/material"
+import ThumbUp from "@mui/icons-material/ThumbUp"
+import DeleteIcon from "@mui/icons-material/Delete"
+import EditIcon from "@mui/icons-material/Edit"
+const PostCard = ({ postData, setUpdatePost }) => {
+  const deleteAPost = useSelector((state) => state.deleteAPost)
+  const { loading, error, post } = deleteAPost
 
-const PostCard = ({ postData }) => {
+  const dispatch = useDispatch()
+  const deletePost = async (_id) => {
+    let answer = window.confirm("Are you sure you want to delete")
+    if (!answer) {
+      return
+    }
+    dispatch(postDelete(_id))
+    toast.error("post deleted")
+  }
+
+  const likePost = async (_id) => {
+    try {
+      console.log(_id)
+      dispatch(postlike(_id))
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   return (
     <>
       <Card sx={{ maxWidth: 230 }}>
@@ -38,8 +67,43 @@ const PostCard = ({ postData }) => {
           </Typography>
         </CardContent>
         <CardActions sx={{ mt: "-1rem" }}>
-          <Button size="small">Like</Button>
-          <Button size="small">Delete</Button>
+          <Grid container>
+            <Grid container>
+              <Button
+                size="small"
+                sx={{ ml: "0.1rem" }}
+                onClick={() => likePost(postData?._id)}
+              >
+                Like
+                <ThumbUp sx={{ ml: "0.25rem" }} />
+              </Button>
+              <Typography
+                variant="body2"
+                sx={{ mt: "0.5rem", color: "#ffcd38" }}
+              >
+                {postData?.likeCount}{" "}
+                {postData?.likeCount === 0
+                  ? "Not liked"
+                  : postData?.likeCount === 1
+                  ? "like"
+                  : "likes"}
+              </Typography>
+            </Grid>
+            <Grid container>
+              <Button
+                size="small"
+                onClick={() => deletePost(postData?._id)}
+                sx={{ mr: "0.5rem" }}
+              >
+                Delete
+                <DeleteIcon sx={{ ml: "0.25rem" }} />
+              </Button>
+              <Button size="small" onClick={() => setUpdatePost(postData?._id)}>
+                Update
+                <EditIcon sx={{ ml: "0.25rem" }} />
+              </Button>
+            </Grid>
+          </Grid>
         </CardActions>
       </Card>
     </>

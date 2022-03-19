@@ -18,21 +18,26 @@ import { useSession, signIn, signOut, getSession } from "next-auth/react"
 import { useRouter } from "next/router"
 import { toast } from "react-toastify"
 import { parseCookies } from "nookies"
-import { GoogleLoginButton } from "react-social-login-buttons"
-import { loadUser } from "../../../redux/userAction"
 import { useDispatch, useSelector } from "react-redux"
 import Form from "../../../components/form/Form"
 
 import PostCard from "../../../components/posts/PostCard"
 import { getPosts } from "../../../redux/posts/postActions"
+import { CircularProgress } from "@mui/material"
 
 const theme = createTheme()
 
 function Dashboard() {
+  const [updatePost, setUpdatePost] = useState("")
+
   const router = useRouter()
 
   const postGet = useSelector((state) => state.postGet)
   const { loading, error, posts } = postGet
+
+  const post = posts?.filter((post) => post._id === updatePost)
+
+  const postData = post && post[0]
 
   const cookies = parseCookies()
   const dispatch = useDispatch()
@@ -47,17 +52,21 @@ function Dashboard() {
     <Grid container sx={{ mt: "1rem" }}>
       <Grid item xs={8}>
         <Grid container>
-          {posts &&
+          {loading ? (
+            <CircularProgress />
+          ) : (
+            posts &&
             posts?.map((post) => (
               <Box key={post._id} sx={{ m: 1 }}>
-                <PostCard postData={post} />
+                <PostCard postData={post} setUpdatePost={setUpdatePost} />
               </Box>
-            ))}
+            ))
+          )}
         </Grid>
       </Grid>
 
       <Grid item xs={4}>
-        <Form />
+        <Form post={postData} />
       </Grid>
     </Grid>
   )

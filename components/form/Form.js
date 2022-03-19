@@ -17,18 +17,30 @@ import axios from "axios"
 import { useSession, signIn, signOut, getSession } from "next-auth/react"
 
 import { useRouter } from "next/router"
-
+import PhotoCameraIcon from "@mui/icons-material/PhotoCamera"
 import FileBase from "react-file-base64"
-import { createPosts } from "../../redux/posts/postActions"
+import { createPosts, updatePost } from "../../redux/posts/postActions"
 import { useDispatch } from "react-redux"
+import { toast } from "react-toastify"
 
-function Form() {
+function Form({ post }) {
   const [message, setMessage] = useState("")
   const [tags, setTags] = useState("")
   const [creater, setCreater] = useState("")
   const [title, setTitle] = useState("")
   const [selectedFile, setSelectedFile] = useState("")
   const router = useRouter()
+
+  useEffect(() => {
+    if (post) {
+      setMessage(post.message)
+      setTags(post.tags)
+      setCreater(post.creater)
+      setTitle(post.title)
+    }
+  }, [post])
+
+  // console.log(tags)
 
   const dispatch = useDispatch()
   const SubmitHandler = async (e) => {
@@ -42,7 +54,15 @@ function Form() {
       title,
     }
 
-    dispatch(createPosts(memoryData))
+    if (post) {
+      dispatch(updatePost(post._id, memoryData))
+      toast.success("post updated")
+      var memoryData = {}
+    } else {
+      dispatch(createPosts(memoryData))
+      toast.success("post created")
+      var memoryData = {}
+    }
   }
 
   return (
@@ -58,10 +78,10 @@ function Form() {
           }}
         >
           <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-            <LockOutlinedIcon />
+            <PhotoCameraIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Memory Capture
+            Memory {post ? "Edit" : "Capture"}
           </Typography>
           <Box
             component="form"
@@ -117,7 +137,7 @@ function Form() {
                   id="tags"
                   autoComplete="tags"
                   value={tags}
-                  onChange={(e) => setTags(e.target.value)}
+                  onChange={(e) => setTags(e.target.value.split(","))}
                 />
               </Grid>
               <Grid item xs={12}>
