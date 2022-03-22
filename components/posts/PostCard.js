@@ -12,9 +12,12 @@ import { Box, Grid } from "@mui/material"
 import ThumbUp from "@mui/icons-material/ThumbUp"
 import DeleteIcon from "@mui/icons-material/Delete"
 import EditIcon from "@mui/icons-material/Edit"
+import { useState } from "react"
 const PostCard = ({ postData, setUpdatePost }) => {
   const deleteAPost = useSelector((state) => state.deleteAPost)
   const { loading, error, post } = deleteAPost
+
+  const [likes, setLikes] = useState()
 
   const dispatch = useDispatch()
   const deletePost = async (_id) => {
@@ -28,7 +31,7 @@ const PostCard = ({ postData, setUpdatePost }) => {
 
   const likePost = async (_id) => {
     try {
-      console.log(_id)
+      setLikes(postData?.likeCount + 1)
       dispatch(postlike(_id))
     } catch (error) {
       console.log(error)
@@ -81,15 +84,14 @@ const PostCard = ({ postData, setUpdatePost }) => {
                 variant="body2"
                 sx={{ mt: "0.5rem", color: "#ffcd38" }}
               >
-                {postData?.likeCount}{" "}
-                {postData?.likeCount === 0
-                  ? "Not liked"
-                  : postData?.likeCount === 1
-                  ? "like"
-                  : "likes"}
+                {likes}{" "}
+                {likes === 0 ? "No likes yet" : likes === 1 ? "like" : "likes"}
               </Typography>
             </Grid>
-            <Grid container>
+            <Grid
+              container
+              sx={{ display: "flex", justifyContent: "space-between" }}
+            >
               <Button
                 size="small"
                 onClick={() => deletePost(postData?._id)}

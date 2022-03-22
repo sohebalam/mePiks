@@ -14,6 +14,10 @@ import {
   POST_UPDATE_FAIL,
 } from "./postTypes"
 
+import { parseCookies } from "nookies"
+
+const cookies = parseCookies()
+
 export const getPosts = () => async (dispatch) => {
   try {
     dispatch({ type: GET_POSTS_REQUEST })
@@ -123,9 +127,12 @@ export const postlike = (_id) => async (dispatch) => {
   try {
     dispatch({ type: POST_UPDATE_REQUEST })
 
+    console.log("action", cookies.token)
+
     const config = {
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${cookies.token}`,
       },
     }
 
