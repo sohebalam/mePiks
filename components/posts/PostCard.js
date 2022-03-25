@@ -17,7 +17,7 @@ const PostCard = ({ postData, setUpdatePost }) => {
   const deleteAPost = useSelector((state) => state.deleteAPost)
   const { loading, error, post } = deleteAPost
 
-  const [likes, setLikes] = useState()
+  const [likes, setLikes] = useState(postData?.likes.length)
 
   const dispatch = useDispatch()
   const deletePost = async (_id) => {
@@ -31,7 +31,16 @@ const PostCard = ({ postData, setUpdatePost }) => {
 
   const likePost = async (_id) => {
     try {
-      setLikes(postData?.likeCount + 1)
+      const hasLiked = postData?.likes.includes(postData?.likes.toString())
+
+      // console.log("has", hasLiked)
+
+      if (!hasLiked) {
+        setLikes(postData?.likes.length + 1)
+      } else {
+        setLikes(postData?.likes.length - 1)
+      }
+
       dispatch(postlike(_id))
     } catch (error) {
       console.log(error)
@@ -84,7 +93,7 @@ const PostCard = ({ postData, setUpdatePost }) => {
                 variant="body2"
                 sx={{ mt: "0.5rem", color: "#ffcd38" }}
               >
-                {likes}{" "}
+                {likes === 0 ? "" : likes}{" "}
                 {likes === 0 ? "No likes yet" : likes === 1 ? "like" : "likes"}
               </Typography>
             </Grid>

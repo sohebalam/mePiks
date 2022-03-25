@@ -1,22 +1,79 @@
-import { useSession, signIn, signOut } from "next-auth/react"
+import Avatar from "@mui/material/Avatar"
 
-export default function Component() {
+import CssBaseline from "@mui/material/CssBaseline"
+import TextField from "@mui/material/TextField"
+import FormControlLabel from "@mui/material/FormControlLabel"
+import Checkbox from "@mui/material/Checkbox"
+import Link from "@mui/material/Link"
+import Grid from "@mui/material/Grid"
+import Box from "@mui/material/Box"
+
+import { createTheme, ThemeProvider } from "@mui/material/styles"
+import { useState, useEffect } from "react"
+
+import { useSession, signIn, signOut, getSession } from "next-auth/react"
+import { useRouter } from "next/router"
+import { toast } from "react-toastify"
+import { parseCookies } from "nookies"
+import { useDispatch, useSelector } from "react-redux"
+
+import PostCard from "../components/posts/PostCard"
+import { getPosts } from "../redux/posts/postActions"
+import { CircularProgress } from "@mui/material"
+
+const theme = createTheme()
+
+function Dashboard() {
+  const [updatePost, setUpdatePost] = useState("")
+
+  const router = useRouter()
+
+  const postGet = useSelector((state) => state.postGet)
+  const { loading, error, posts } = postGet
+
+  const post = posts?.filter((post) => post._id === updatePost)
+
+  const postData = post && post[0]
+
+  const cookies = parseCookies()
+  const dispatch = useDispatch()
+
   const { data: session } = useSession()
-  console.log(session)
-  if (session) {
-    return (
-      <>
-        <h1>Home</h1>
-        {/* Signed in as {session.user.email} <br />
-        <button onClick={() => signOut()}>Sign out</button> */}
-      </>
-    )
-  }
+
+  useEffect(() => {
+    dispatch(getPosts())
+  }, [])
+
   return (
-    <>
-      <h1>Home</h1>
-      {/* Not signed in <br />
-      <button onClick={() => signIn("google")}>Sign in</button> */}
-    </>
+    <Grid container sx={{ mt: "1rem" }}>
+      <Grid item xs={8}>
+        <Grid container>
+          {loading ? (
+            <CircularProgress />
+          ) : (
+            posts &&
+            posts?.map((post) => (
+              <Box key={post._id} sx={{ m: 1 }}>
+                <PostCard postData={post} setUpdatePost={setUpdatePost} />
+              </Box>
+            ))
+          )}
+        </Grid>
+      </Grid>
+
+      <Grid item xs={4}></Grid>
+    </Grid>
   )
 }
+
+export async function getServerSideProps(context) {
+  const session = await getSession(context)
+
+  return {
+    props: {
+      session,
+    },
+  }
+}
+
+export default Dashboard

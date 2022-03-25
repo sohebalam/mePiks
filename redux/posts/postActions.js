@@ -136,7 +136,7 @@ export const postlike = (_id) => async (dispatch) => {
       },
     }
 
-    const { data } = await axios.patch(`/api/posts/${_id}`, {}, config)
+    const { data } = await axios.patch(`/api/posts/likes/${_id}`, {}, config)
 
     dispatch({
       type: POST_UPDATE_SUCCESS,
