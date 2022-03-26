@@ -12,6 +12,9 @@ import {
   POST_UPDATE_REQUEST,
   POST_UPDATE_SUCCESS,
   POST_UPDATE_FAIL,
+  GET_PAGINATE_FAIL,
+  GET_PAGINATE_SUCCESS,
+  GET_PAGINATE_REQUEST,
 } from "./postTypes"
 
 import { parseCookies } from "nookies"
@@ -145,6 +148,27 @@ export const postlike = (_id) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: POST_UPDATE_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    })
+  }
+}
+
+export const paginatePosts = (number) => async (dispatch) => {
+  try {
+    dispatch({ type: GET_PAGINATE_REQUEST })
+
+    const { data } = await axios.get(`/api/posts/paginate/${number}`)
+
+    dispatch({
+      type: GET_PAGINATE_SUCCESS,
+      payload: data,
+    })
+  } catch (error) {
+    dispatch({
+      type: GET_PAGINATE_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

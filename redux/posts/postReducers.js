@@ -11,6 +11,9 @@ import {
   POST_UPDATE_REQUEST,
   POST_UPDATE_SUCCESS,
   POST_UPDATE_FAIL,
+  GET_PAGINATE_REQUEST,
+  GET_PAGINATE_SUCCESS,
+  GET_PAGINATE_FAIL,
 } from "./postTypes"
 
 export const postGetReducer = (state = {}, action) => {
@@ -59,6 +62,19 @@ export const postUpdateReducer = (state = {}, action) => {
     case POST_UPDATE_SUCCESS:
       return { loading: false, post: action.payload }
     case POST_UPDATE_FAIL:
+      return { loading: false, error: action.payload }
+    default:
+      return state
+  }
+}
+
+export const paginateReducer = (state = {}, action) => {
+  switch (action.type) {
+    case GET_PAGINATE_REQUEST:
+      return { loading: true }
+    case GET_PAGINATE_SUCCESS:
+      return { loading: false, posts: action.payload }
+    case GET_PAGINATE_FAIL:
       return { loading: false, error: action.payload }
     default:
       return state

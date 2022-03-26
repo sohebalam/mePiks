@@ -16,6 +16,7 @@ import { useRouter } from "next/router"
 import { toast } from "react-toastify"
 import { parseCookies } from "nookies"
 import { useDispatch, useSelector } from "react-redux"
+import Paginate from "../components/Paginate"
 
 import PostCard from "../components/posts/PostCard"
 import { getPosts } from "../redux/posts/postActions"
@@ -28,10 +29,10 @@ function Dashboard() {
 
   const router = useRouter()
 
-  const postGet = useSelector((state) => state.postGet)
-  const { loading, error, posts } = postGet
+  const paginate = useSelector((state) => state.paginate)
+  const { loading, error, posts } = paginate
 
-  const post = posts?.filter((post) => post._id === updatePost)
+  const post = posts?.data?.filter((post) => post._id === updatePost)
 
   const postData = post && post[0]
 
@@ -52,7 +53,7 @@ function Dashboard() {
             <CircularProgress />
           ) : (
             posts &&
-            posts?.map((post) => (
+            posts?.data?.map((post) => (
               <Box key={post._id} sx={{ m: 1 }}>
                 <PostCard postData={post} setUpdatePost={setUpdatePost} />
               </Box>
@@ -61,7 +62,9 @@ function Dashboard() {
         </Grid>
       </Grid>
 
-      <Grid item xs={4}></Grid>
+      <Grid item xs={4} sx={{ mt: "0.5rem" }}>
+        <Paginate />
+      </Grid>
     </Grid>
   )
 }

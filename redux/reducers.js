@@ -1,6 +1,7 @@
 import { combineReducers } from "redux"
 import {
   deleteAPostReducer,
+  paginateReducer,
   postCreateReducer,
   postGetReducer,
 } from "./posts/postReducers"
@@ -12,6 +13,7 @@ const reducers = combineReducers({
   postGet: postGetReducer,
   postCreate: postCreateReducer,
   deleteAPost: deleteAPostReducer,
+  paginate: paginateReducer,
 })
 
 export default reducers
