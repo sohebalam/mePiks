@@ -7,6 +7,7 @@ import Checkbox from "@mui/material/Checkbox"
 import Link from "@mui/material/Link"
 import Grid from "@mui/material/Grid"
 import Box from "@mui/material/Box"
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined"
 
 import { createTheme, ThemeProvider } from "@mui/material/styles"
 import { useState, useEffect } from "react"
@@ -16,11 +17,11 @@ import { useRouter } from "next/router"
 import { toast } from "react-toastify"
 import { parseCookies } from "nookies"
 import { useDispatch, useSelector } from "react-redux"
-import Paginate from "../components/Paginate"
 
 import PostCard from "../components/posts/PostCard"
-import { getPosts } from "../redux/posts/postActions"
+import { getPosts, paginatePosts } from "../redux/posts/postActions"
 import { CircularProgress } from "@mui/material"
+import Paginate from "../components/Paginate"
 
 const theme = createTheme()
 
@@ -32,17 +33,12 @@ function Dashboard() {
   const paginate = useSelector((state) => state.paginate)
   const { loading, error, posts } = paginate
 
-  const post = posts?.data?.filter((post) => post._id === updatePost)
-
-  const postData = post && post[0]
-
-  const cookies = parseCookies()
+  console.log(posts)
   const dispatch = useDispatch()
 
-  const { data: session } = useSession()
-
   useEffect(() => {
-    dispatch(getPosts())
+    const number = 1
+    dispatch(paginatePosts(number))
   }, [])
 
   return (
@@ -52,7 +48,7 @@ function Dashboard() {
           {loading ? (
             <CircularProgress />
           ) : (
-            posts &&
+            posts?.data &&
             posts?.data?.map((post) => (
               <Box key={post._id} sx={{ m: 1 }}>
                 <PostCard postData={post} setUpdatePost={setUpdatePost} />
@@ -62,7 +58,7 @@ function Dashboard() {
         </Grid>
       </Grid>
 
-      <Grid item xs={4} sx={{ mt: "0.5rem" }}>
+      <Grid item xs={4}>
         <Paginate />
       </Grid>
     </Grid>

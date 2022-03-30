@@ -51,11 +51,12 @@ export const createPosts = (memoryData) => async (dispatch) => {
     const config = {
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${cookies.token}`,
       },
     }
 
     const { data } = await axios.post(
-      `/api/posts/posts`,
+      `/api/posts/create`,
       { memoryData },
       config
     )
@@ -78,8 +79,14 @@ export const createPosts = (memoryData) => async (dispatch) => {
 export const postDelete = (_id) => async (dispatch) => {
   try {
     dispatch({ type: POST_DELETE_REQUEST })
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${cookies.token}`,
+      },
+    }
 
-    const { data } = await axios.delete(`/api/posts/${_id}`)
+    const { data } = await axios.delete(`/api/posts/${_id}`, config)
 
     dispatch({
       type: POST_DELETE_SUCCESS,
@@ -103,6 +110,7 @@ export const updatePost = (_id, memoryData) => async (dispatch) => {
     const config = {
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${cookies.token}`,
       },
     }
 
@@ -161,6 +169,8 @@ export const paginatePosts = (number) => async (dispatch) => {
     dispatch({ type: GET_PAGINATE_REQUEST })
 
     const { data } = await axios.get(`/api/posts/paginate/${number}`)
+
+    console.log(data)
 
     dispatch({
       type: GET_PAGINATE_SUCCESS,

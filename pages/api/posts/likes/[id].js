@@ -22,8 +22,8 @@ export default Authenticated(async (req, res) => {
         return res.status(404).send(`unathenticated`)
       }
 
-      console.log(req.user._id.toString())
-      console.log("post", post[0]?.likes)
+      // console.log(req.user._id.toString())
+      // console.log("post", post[0]?.likes)
 
       const index = post[0]?.likes.findIndex(
         (id) => id === req.user._id.toString()

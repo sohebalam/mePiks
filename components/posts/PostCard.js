@@ -12,12 +12,20 @@ import { Box, Grid } from "@mui/material"
 import ThumbUp from "@mui/icons-material/ThumbUp"
 import DeleteIcon from "@mui/icons-material/Delete"
 import EditIcon from "@mui/icons-material/Edit"
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { useRouter } from "next/router"
+
 const PostCard = ({ postData, setUpdatePost }) => {
   const deleteAPost = useSelector((state) => state.deleteAPost)
   const { loading, error, post } = deleteAPost
 
   const [likes, setLikes] = useState(postData?.likes.length)
+
+  useEffect(() => {}, [postDelete])
+
+  const router = useRouter()
+
+  console.log(router.pathname)
 
   const dispatch = useDispatch()
   const deletePost = async (_id) => {
@@ -29,19 +37,23 @@ const PostCard = ({ postData, setUpdatePost }) => {
     toast.error("post deleted")
   }
 
+  const profile = useSelector((state) => state.profile)
+  const { dbUser } = profile
+
   const likePost = async (_id) => {
+    const hasLiked = postData?.likes.includes(dbUser?._id)
     try {
-      const hasLiked = postData?.likes.includes(postData?.likes.toString())
-
-      // console.log("has", hasLiked)
-
-      if (!hasLiked) {
-        setLikes(postData?.likes.length + 1)
-      } else {
+      if (hasLiked) {
         setLikes(postData?.likes.length - 1)
+
+        dispatch(postlike(_id))
+      } else {
+        setLikes(postData?.likes.length + 1)
+
+        dispatch(postlike(_id))
       }
 
-      dispatch(postlike(_id))
+      console.log()
     } catch (error) {
       console.log(error)
     }
@@ -101,18 +113,25 @@ const PostCard = ({ postData, setUpdatePost }) => {
               container
               sx={{ display: "flex", justifyContent: "space-between" }}
             >
-              <Button
-                size="small"
-                onClick={() => deletePost(postData?._id)}
-                sx={{ mr: "0.5rem" }}
-              >
-                Delete
-                <DeleteIcon sx={{ ml: "0.25rem" }} />
-              </Button>
-              <Button size="small" onClick={() => setUpdatePost(postData?._id)}>
-                Update
-                <EditIcon sx={{ ml: "0.25rem" }} />
-              </Button>
+              {router.pathname === "/src/user/dashboard" && (
+                <>
+                  <Button
+                    size="small"
+                    onClick={() => deletePost(postData?._id)}
+                    sx={{ mr: "0.5rem" }}
+                  >
+                    Delete
+                    <DeleteIcon sx={{ ml: "0.25rem" }} />
+                  </Button>
+                  <Button
+                    size="small"
+                    onClick={() => setUpdatePost(postData?._id)}
+                  >
+                    Update
+                    <EditIcon sx={{ ml: "0.25rem" }} />
+                  </Button>
+                </>
+              )}
             </Grid>
           </Grid>
         </CardActions>

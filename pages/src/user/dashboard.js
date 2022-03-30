@@ -20,6 +20,7 @@ import { toast } from "react-toastify"
 import { parseCookies } from "nookies"
 import { useDispatch, useSelector } from "react-redux"
 import Form from "../../../components/form/Form"
+import AuthWrapper from "../../../components/auth/authWrapper"
 
 import PostCard from "../../../components/posts/PostCard"
 import { getPosts } from "../../../redux/posts/postActions"
@@ -49,26 +50,28 @@ function Dashboard() {
   }, [])
 
   return (
-    <Grid container sx={{ mt: "1rem" }}>
-      <Grid item xs={8}>
-        <Grid container>
-          {loading ? (
-            <CircularProgress />
-          ) : (
-            posts &&
-            posts?.map((post) => (
-              <Box key={post._id} sx={{ m: 1 }}>
-                <PostCard postData={post} setUpdatePost={setUpdatePost} />
-              </Box>
-            ))
-          )}
+    <AuthWrapper>
+      <Grid container sx={{ mt: "1rem" }}>
+        <Grid item xs={8}>
+          <Grid container>
+            {loading ? (
+              <CircularProgress />
+            ) : (
+              posts &&
+              posts?.map((post) => (
+                <Box key={post._id} sx={{ m: 1 }}>
+                  <PostCard postData={post} setUpdatePost={setUpdatePost} />
+                </Box>
+              ))
+            )}
+          </Grid>
+        </Grid>
+
+        <Grid item xs={4}>
+          <Form post={postData} />
         </Grid>
       </Grid>
-
-      <Grid item xs={4}>
-        <Form post={postData} />
-      </Grid>
-    </Grid>
+    </AuthWrapper>
   )
 }
 

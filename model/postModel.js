@@ -4,6 +4,9 @@ const postSchema = mongoose.Schema({
   title: {
     type: String,
   },
+  userId: {
+    type: String,
+  },
 
   message: {
     type: String,

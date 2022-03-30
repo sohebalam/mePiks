@@ -12,17 +12,4 @@ export default async (req, res) => {
       return res.status(404).json({ message: err.message })
     }
   }
-
-  if (req.method === "POST") {
-    const post = req.body.memoryData
-    // console.log(req.method)
-    const newPost = await new Post(post)
-    try {
-      await newPost.save()
-
-      return res.status(201).json(newPost)
-    } catch (err) {
-      return res.status(409).json({ message: err.message })
-    }
-  }
 }

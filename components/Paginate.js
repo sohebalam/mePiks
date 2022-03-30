@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from "react"
-import { useDispatch, useSelector } from "react-redux"
-
-import { Pagination, PaginationItem, Paper } from "@mui/material"
-// import { getPosts } from "../actions/posts"
+import Pagination from "@mui/material/Pagination"
+import PaginationItem from "@mui/material/PaginationItem"
 import { styled } from "@mui/material/styles"
+import Paper from "@mui/material/Paper"
 import axios from "axios"
 import { paginatePosts } from "../redux/posts/postActions"
+import { useDispatch, useSelector } from "react-redux"
+import { useEffect } from "react"
+
 const Paginate = () => {
-  //   const [currentPage, setCurrentPage] = useState(1)
   const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
     ...theme.typography.body2,
@@ -28,25 +28,25 @@ const Paginate = () => {
 
   const handleChange = async (number) => {
     if (number === 0) number = 1
-
-    dispatch(paginatePosts(number))
+    try {
+      dispatch(paginatePosts(number))
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   return (
-    <Paper
-      xs={{ borderRadius: 4, marginTop: "1rem", padding: "16px" }}
-      elevation={6}
-    >
-      <Item>Select Posts</Item>
-      <Pagination
-        sx={{ justifyContent: "space-around" }}
-        count={Number(posts?.numberOfPages) || 1}
-        onChange={(e) => handleChange(e.target.textContent)}
-        variant="outlined"
-        color="primary"
-        renderItem={(item) => <PaginationItem {...item} />}
-      />
-    </Paper>
+    <>
+      <Item>Please Select Page</Item>
+      <Paper sx={{ borderRadius: 4, mt: "1rem" }} elevation={6}>
+        <Pagination
+          color="primary"
+          count={(posts && Number(posts?.count)) || 1}
+          onChange={(e) => handleChange(e.target.textContent)}
+          renderItem={(item) => <PaginationItem {...item} />}
+        />
+      </Paper>
+    </>
   )
 }
 

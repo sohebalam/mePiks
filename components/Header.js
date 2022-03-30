@@ -77,13 +77,16 @@ export default function ButtonAppBar() {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             MePiks
           </Typography>
-          <Link href="/src/user/profile">
-            <Button color="inherit">{userState && userState.name}</Button>
-          </Link>
 
           <Box sx={{ ml: 2 }}>
             {userState ? (
               <>
+                <Link href="/src/user/dashboard">
+                  <Button color="inherit">Create Posts</Button>
+                </Link>
+                <Link href="/src/user/profile">
+                  <Button color="inherit">{userState && userState.name}</Button>
+                </Link>
                 <Button color="inherit" onClick={logoutHandler}>
                   Logout
                 </Button>

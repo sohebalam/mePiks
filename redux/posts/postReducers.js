@@ -69,10 +69,12 @@ export const postUpdateReducer = (state = {}, action) => {
 }
 
 export const paginateReducer = (state = {}, action) => {
+  // console.log("reduer", action.payload)
   switch (action.type) {
     case GET_PAGINATE_REQUEST:
       return { loading: true }
     case GET_PAGINATE_SUCCESS:
+      // console.log("reduer", action.payload)
       return { loading: false, posts: action.payload }
     case GET_PAGINATE_FAIL:
       return { loading: false, error: action.payload }
