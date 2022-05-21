@@ -61,81 +61,90 @@ const PostCard = ({ postData, setUpdatePost }) => {
 
   return (
     <>
-      <Card sx={{ maxWidth: 230 }}>
-        <CardMedia
-          component="img"
-          height="200"
-          image={postData?.image}
-          alt="green iguana"
-        />
-        <CardContent>
-          <Typography gutterBottom variant="h5" component="div">
-            {postData?.title}
-          </Typography>
-          <Typography gutterBottom variant="h7" component="div">
-            {postData?.creater}
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            {postData?.message.length > 60
-              ? postData?.message.substring(60, 0) + "..."
-              : postData?.message}
-          </Typography>
-          <Typography
-            variant="body2"
-            color="text.secondary"
-            sx={{ mt: "0.5rem" }}
-          >
-            {postData?.tags.map((tag) =>
-              tag.length > 22 ? `#${tag.substring(22, 0)}` + "..." : `#${tag}`
-            )}
-          </Typography>
-        </CardContent>
-        <CardActions sx={{ mt: "-1rem" }}>
-          <Grid container>
-            <Grid container>
-              <Button
-                size="small"
-                sx={{ ml: "0.1rem" }}
-                onClick={() => likePost(postData?._id)}
-              >
-                Like
-                <ThumbUp sx={{ ml: "0.25rem" }} />
-              </Button>
-              <Typography
-                variant="body2"
-                sx={{ mt: "0.5rem", color: "#ffcd38" }}
-              >
-                {likes === 0 ? "" : likes}{" "}
-                {likes === 0 ? "No likes yet" : likes === 1 ? "like" : "likes"}
-              </Typography>
-            </Grid>
-            <Grid
-              container
-              sx={{ display: "flex", justifyContent: "space-between" }}
+      <div
+        onClick={() => router.push(`/src/post/${postData._id}`)}
+        style={{ cursor: "pointer" }}
+      >
+        <Card sx={{ maxWidth: 230 }}>
+          <CardMedia
+            component="img"
+            height="200"
+            image={postData?.image}
+            alt="green iguana"
+          />
+          <CardContent>
+            <Typography gutterBottom variant="h5" component="div">
+              {postData?.title}
+            </Typography>
+            <Typography gutterBottom variant="h7" component="div">
+              {postData?.creater}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              {postData?.message.length > 60
+                ? postData?.message.substring(60, 0) + "..."
+                : postData?.message}
+            </Typography>
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              sx={{ mt: "0.5rem" }}
             >
-              {router.pathname === "/src/user/dashboard" && (
-                <>
-                  <Button
-                    size="small"
-                    onClick={() => deletePost(postData?._id)}
-                    sx={{ mr: "0.5rem" }}
-                  >
-                    Delete
-                    <DeleteIcon sx={{ ml: "0.25rem" }} />
-                  </Button>
-                  <Button
-                    size="small"
-                    onClick={() => setUpdatePost(postData?._id)}
-                  >
-                    Update
-                    <EditIcon sx={{ ml: "0.25rem" }} />
-                  </Button>
-                </>
+              {postData?.tags.map((tag) =>
+                tag.length > 22 ? `#${tag.substring(22, 0)}` + "..." : `#${tag}`
               )}
+            </Typography>
+          </CardContent>
+          <CardActions sx={{ mt: "-1rem" }}>
+            <Grid container>
+              <Grid container>
+                <Button
+                  size="small"
+                  sx={{ ml: "0.1rem" }}
+                  onClick={() => likePost(postData?._id)}
+                >
+                  Like
+                  <ThumbUp sx={{ ml: "0.25rem" }} />
+                </Button>
+                <Typography
+                  variant="body2"
+                  sx={{ mt: "0.5rem", color: "#ffcd38" }}
+                >
+                  {likes === 0 ? "" : likes}{" "}
+                  {likes === 0
+                    ? "No likes yet"
+                    : likes === 1
+                    ? "like"
+                    : "likes"}
+                </Typography>
+              </Grid>
+              <Grid
+                container
+                sx={{ display: "flex", justifyContent: "space-between" }}
+              >
+                {router.pathname === "/src/user/dashboard" && (
+                  <>
+                    <Button
+                      size="small"
+                      onClick={() => deletePost(postData?._id)}
+                      sx={{ mr: "0.5rem" }}
+                    >
+                      Delete
+                      <DeleteIcon sx={{ ml: "0.25rem" }} />
+                    </Button>
+                    <Button
+                      size="small"
+                      onClick={() => setUpdatePost(postData?._id)}
+                    >
+                      Update
+                      <EditIcon sx={{ ml: "0.25rem" }} />
+                    </Button>
+                  </>
+                )}
+              </Grid>
             </Grid>
-          </Grid>
-        </CardActions>
-      </Card>
+          </CardActions>
+        </Card>
+      </div>
     </>
   )
 }

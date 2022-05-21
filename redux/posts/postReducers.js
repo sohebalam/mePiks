@@ -14,6 +14,10 @@ import {
   GET_PAGINATE_REQUEST,
   GET_PAGINATE_SUCCESS,
   GET_PAGINATE_FAIL,
+  SEARCH_POSTS_REQUEST,
+  SEARCH_POSTS_SUCCESS,
+  SEARCH_POSTS_FAIL,
+  CLEAR_DATA,
 } from "./postTypes"
 
 export const postGetReducer = (state = {}, action) => {
@@ -77,6 +81,21 @@ export const paginateReducer = (state = {}, action) => {
       // console.log("reduer", action.payload)
       return { loading: false, posts: action.payload }
     case GET_PAGINATE_FAIL:
+      return { loading: false, error: action.payload }
+    default:
+      return state
+  }
+}
+
+export const searchPostsReducer = (state = {}, action) => {
+  switch (action.type) {
+    case SEARCH_POSTS_REQUEST:
+      return { loading: true }
+    case SEARCH_POSTS_SUCCESS:
+      return { loading: false, posts: action.payload }
+    case CLEAR_DATA:
+      return { loading: false, posts: action.payload }
+    case SEARCH_POSTS_FAIL:
       return { loading: false, error: action.payload }
     default:
       return state

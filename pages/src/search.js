@@ -1,55 +1,55 @@
-import CssBaseline from "@mui/material/CssBaseline"
 import TextField from "@mui/material/TextField"
-import FormControlLabel from "@mui/material/FormControlLabel"
-import Checkbox from "@mui/material/Checkbox"
-import Link from "@mui/material/Link"
 import Grid from "@mui/material/Grid"
 import Box from "@mui/material/Box"
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined"
 
-import { createTheme, ThemeProvider } from "@mui/material/styles"
 import { useState, useEffect } from "react"
-
+import axios from "axios"
 import { useSession, signIn, signOut, getSession } from "next-auth/react"
 import { useRouter } from "next/router"
-import { toast } from "react-toastify"
-import { parseCookies } from "nookies"
 import { useDispatch, useSelector } from "react-redux"
-
-import PostCard from "../components/posts/PostCard"
-import {
-  clearData,
-  getPosts,
-  paginatePosts,
-  postSearch,
-} from "../redux/posts/postActions"
+import action from "axios"
+import PostCard from "../../components/posts/PostCard"
+import { clearData, paginatePosts } from "../../redux/posts/postActions"
 import { Button, CircularProgress } from "@mui/material"
-import Paginate from "../components/Paginate"
+import Paginate from "../../components/SearchPaginate"
+import { postSearch } from "../../redux/posts/postActions"
 
-const theme = createTheme()
-
-function Dashboard() {
-  const [updatePost, setUpdatePost] = useState("")
-
-  const [search, setSearch] = useState("")
-
+const Search = () => {
   const router = useRouter()
 
-  const paginate = useSelector((state) => state.paginate)
-  const { loading, error, posts } = paginate
+  const [updatePost, setUpdatePost] = useState("")
 
-  console.log(posts)
+  const [newSearch, setNewSearch] = useState("")
+
+  const [num, setNum] = useState(1)
+
+  const searchPosts = useSelector((state) => state.searchPosts)
+  const { loading, error, posts } = searchPosts
+
   const dispatch = useDispatch()
+
+  const clearSearch = async () => {
+    dispatch(clearData())
+    dispatch(postSearch("", num))
+    router.push("/")
+  }
 
   useEffect(() => {
     const number = 1
     dispatch(paginatePosts(number))
+
+    postSearch(search, num)
   }, [])
 
-  const clearSearch = async () => {}
+  useEffect(() => {
+    dispatch(postSearch(search, num))
+  }, [num])
+
+  const { search } = router.query
 
   const handleSearch = async () => {
-    router.push(`/src/search?search=${search}`)
+    router.push(`/src/search?search=${newSearch}`)
+    dispatch(postSearch(newSearch, num))
   }
 
   return (
@@ -78,8 +78,8 @@ function Dashboard() {
           label="search"
           type="search"
           id="search"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          value={newSearch}
+          onChange={(e) => setNewSearch(e.target.value)}
         />
 
         <Button variant="contained" fullWidth onClick={handleSearch}>
@@ -94,7 +94,8 @@ function Dashboard() {
         >
           Clear Search
         </Button>
-        <Paginate />
+
+        <Paginate search={search} />
       </Grid>
     </Grid>
   )
@@ -110,4 +111,4 @@ export async function getServerSideProps(context) {
   }
 }
 
-export default Dashboard
+export default Search

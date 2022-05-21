@@ -15,6 +15,10 @@ import {
   GET_PAGINATE_FAIL,
   GET_PAGINATE_SUCCESS,
   GET_PAGINATE_REQUEST,
+  SEARCH_POSTS_REQUEST,
+  SEARCH_POSTS_SUCCESS,
+  SEARCH_POSTS_FAIL,
+  CLEAR_DATA,
 } from "./postTypes"
 
 import { parseCookies } from "nookies"
@@ -184,5 +188,52 @@ export const paginatePosts = (number) => async (dispatch) => {
           ? error.response.data.message
           : error.message,
     })
+  }
+}
+
+export const postSearch = (search, page) => async (dispatch) => {
+  try {
+    dispatch({ type: SEARCH_POSTS_REQUEST })
+
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+    const { data } = await axios.post(
+      `/api/posts/search?search=${search}`,
+      { page },
+      config
+    )
+
+    console.log(data)
+
+    dispatch({
+      type: SEARCH_POSTS_SUCCESS,
+      payload: data,
+    })
+  } catch (error) {
+    dispatch({
+      type: SEARCH_POSTS_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    })
+  }
+}
+
+export const clearData = () => async (dispatch) => {
+  try {
+    dispatch({ type: CLEAR_DATA })
+
+    const data = ""
+
+    dispatch({
+      type: CLEAR_DATA,
+      payload: data,
+    })
+  } catch (error) {
+    console.log(error)
   }
 }

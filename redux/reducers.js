@@ -4,6 +4,7 @@ import {
   paginateReducer,
   postCreateReducer,
   postGetReducer,
+  searchPostsReducer,
 } from "./posts/postReducers"
 
 import { profileReducer } from "./userReducer"
@@ -14,6 +15,7 @@ const reducers = combineReducers({
   postCreate: postCreateReducer,
   deleteAPost: deleteAPostReducer,
   paginate: paginateReducer,
+  searchPosts: searchPostsReducer,
 })
 
 export default reducers
