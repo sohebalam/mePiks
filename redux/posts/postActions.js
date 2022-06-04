@@ -222,6 +222,37 @@ export const postSearch = (search, page) => async (dispatch) => {
     })
   }
 }
+export const getPostBySearch = (tags) => async (dispatch) => {
+  try {
+    dispatch({ type: SEARCH_POSTS_REQUEST })
+
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+    const { data } = await axios.post(
+      `/api/posts/search?search=${tags}`,
+      {},
+      config
+    )
+
+    console.log(data)
+
+    dispatch({
+      type: SEARCH_POSTS_SUCCESS,
+      payload: data,
+    })
+  } catch (error) {
+    dispatch({
+      type: SEARCH_POSTS_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    })
+  }
+}
 
 export const clearData = () => async (dispatch) => {
   try {

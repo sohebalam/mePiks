@@ -5,6 +5,7 @@ import mongoose from "mongoose"
 connectDB()
 
 export default async (req, res) => {
+  // console.log(req.query)
   if (req.method === "GET") {
     const post = await Post.findById(req.query.postId)
 

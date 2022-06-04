@@ -1,7 +1,18 @@
-import { CardMedia, Divider, Grid, Paper, Typography } from "@mui/material"
+import {
+  Divider,
+  Grid,
+  Paper,
+  Typography,
+  CardMedia,
+  CircularProgress,
+  Card,
+} from "@mui/material"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import axios from "axios"
+import { useDispatch, useSelector } from "react-redux"
+import { getPostBySearch } from "../../../redux/posts/postActions"
+import { ThumbUp } from "@mui/icons-material"
 
 const postId = () => {
   const router = useRouter()
@@ -10,11 +21,20 @@ const postId = () => {
 
   const { postId } = router.query
 
-  console.log(post)
+  const searchPosts = useSelector((state) => state.searchPosts)
+  const { loading, error, posts: resPosts } = searchPosts
+
+  const dispatch = useDispatch()
 
   useEffect(() => {
     getPost()
   }, [postId])
+
+  useEffect(() => {
+    if (post) {
+      dispatch(getPostBySearch({ tags: post?.tags.join(",") }))
+    }
+  }, [post])
 
   const getPost = async () => {
     try {
@@ -24,6 +44,13 @@ const postId = () => {
     } catch (error) {
       console.log(error)
     }
+  }
+
+  const recommendedPosts =
+    resPosts && resPosts?.data?.filter((rPost) => post._id !== rPost._id)
+
+  const openPost = async (_id) => {
+    router.push(`/src/post/${_id}`)
   }
 
   return (
@@ -72,6 +99,62 @@ const postId = () => {
               <Typography gutterBottom variant="h5">
                 You might also like:
               </Typography>
+              <Grid container>
+                {loading ? (
+                  <CircularProgress />
+                ) : (
+                  <>
+                    {recommendedPosts &&
+                      recommendedPosts.map((rPost) => (
+                        <Grid
+                          item
+                          sx={{
+                            margin: "0.5rem",
+                            cursor: "pointer",
+                            display: "flex",
+                            flexDirection: "column",
+                          }}
+                          onClick={() => openPost(rPost._id)}
+                          key={rPost._id}
+                        >
+                          <Card sx={{ maxWidth: 300, padding: "1rem" }}>
+                            <Typography variant="h6" gutterBottom>
+                              {rPost.title}
+                            </Typography>
+                            <Typography variant="subtitle1" gutterBottom>
+                              {rPost.name}
+                            </Typography>
+                            <Typography variant="subtitle2" gutterBottom>
+                              {rPost.message}
+                            </Typography>
+                            <Typography
+                              variant="body2"
+                              gutterBottom
+                              color="primary"
+                            >
+                              LIKES
+                              <ThumbUp
+                                sx={{
+                                  ml: "0.25rem",
+                                  mr: "0.25rem",
+                                  mb: "-0.25rem",
+                                }}
+                                color="primary"
+                              />
+                              {rPost.likes.length}
+                            </Typography>
+                            <CardMedia
+                              component="img"
+                              height="200"
+                              image={rPost.image}
+                              alt={rPost.title}
+                            />
+                          </Card>
+                        </Grid>
+                      ))}
+                  </>
+                )}
+              </Grid>
             </div>
           </Grid>
         </Paper>
