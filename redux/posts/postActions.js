@@ -19,6 +19,8 @@ import {
   SEARCH_POSTS_SUCCESS,
   SEARCH_POSTS_FAIL,
   CLEAR_DATA,
+  CREATE_COMMENT_REQUEST,
+  CREATE_COMMENT_FAIL,
 } from "./postTypes"
 
 import { parseCookies } from "nookies"
@@ -246,6 +248,35 @@ export const getPostBySearch = (tags) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: SEARCH_POSTS_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    })
+  }
+}
+
+export const commentPost = (fullComment, postId) => async (dispatch) => {
+  console.log(comment, postId)
+  try {
+    dispatch({ type: CREATE_COMMENT_REQUEST })
+
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+
+    const { data } = await axios.post(
+      `/api/posts/comment`,
+      { fullComment, postId },
+      config
+    )
+
+    return data.comments
+  } catch (error) {
+    dispatch({
+      type: CREATE_COMMENT_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

@@ -14,6 +14,7 @@ const postSchema = mongoose.Schema({
   creater: {
     type: String,
   },
+  comments: { type: [String] },
   tags: [String],
   image: { type: String },
   likes: { type: [String], default: [] },

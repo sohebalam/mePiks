@@ -8,14 +8,19 @@ import {
   Card,
 } from "@mui/material"
 import { useRouter } from "next/router"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import axios from "axios"
 import { useDispatch, useSelector } from "react-redux"
 import { getPostBySearch } from "../../../redux/posts/postActions"
 import { ThumbUp } from "@mui/icons-material"
+import Comment from "../../../components/posts/Comment"
+import { getSession } from "next-auth/react"
+import { parseCookies } from "nookies"
 
-const postId = () => {
+const postId = ({ session }) => {
   const router = useRouter()
+
+  const cookies = parseCookies()
 
   const [post, setPost] = useState()
 
@@ -23,6 +28,15 @@ const postId = () => {
 
   const searchPosts = useSelector((state) => state.searchPosts)
   const { loading, error, posts: resPosts } = searchPosts
+
+  const profile = useSelector((state) => state.profile)
+  const { dbUser } = profile
+
+  const user = dbUser
+    ? dbUser
+    : cookies?.user
+    ? JSON.parse(cookies?.user)
+    : session?.user
 
   const dispatch = useDispatch()
 
@@ -46,13 +60,21 @@ const postId = () => {
     }
   }
 
+  console.log(post?.comments[0])
+
   const recommendedPosts =
-    resPosts && resPosts?.data?.filter((rPost) => post._id !== rPost._id)
+    resPosts && resPosts?.data?.filter((rPost) => post?._id !== rPost._id)
 
   const openPost = async (_id) => {
     router.push(`/src/post/${_id}`)
   }
 
+  const commentsRef = useRef()
+
+  commentsRef?.current?.scrollIntoView({
+    block: "end",
+    behavior: "smooth",
+  })
   return (
     <>
       <Grid sx={{ mt: "0.5rem" }}>
@@ -72,7 +94,13 @@ const postId = () => {
                 {post?.creater}
               </Typography>
               <Divider xs={{ margin: "20px 0" }} />
-              comment
+
+              <Comment
+                postId={post?._id}
+                user={user}
+                postedComments={post?.comments}
+              />
+
               <Divider xs={{ margin: "20px 0" }} />
             </Grid>
             <Grid item xs={6}>
@@ -161,6 +189,16 @@ const postId = () => {
       </Grid>
     </>
   )
+}
+
+export async function getServerSideProps(context) {
+  const session = await getSession(context)
+
+  return {
+    props: {
+      session,
+    },
+  }
 }
 
 export default postId
